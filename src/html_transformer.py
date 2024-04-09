@@ -24,17 +24,17 @@ def text_to_morse(text):
             morse_text += morse_code[char] + " "
     return morse_text.strip()
 
+# Function to convert HTML content to Morse code text
 def html_to_morse(html_text):
-    # Parse the HTML document
     soup = BeautifulSoup(html_text, 'html.parser')
 
-    # Extract text content
-    text_content = soup.get_text()
+    # Find all text nodes and convert to Morse code
+    for text_node in soup.find_all(text=True):
+        if text_node.parent.name not in ['script', 'style']:  # Exclude script and style tags
+            morse_text = text_to_morse(text_node)
+            text_node.replace_with(morse_text)
 
-    # Convert text content to Morse code
-    morse_text = text_to_morse(text_content)
-
-    return morse_text
+    return str(soup)
 
 def read_stdin():
     text = ""
